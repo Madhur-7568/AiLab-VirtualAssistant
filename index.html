@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthPulse AI | Healthcare Virtual Assistant & Medical Doubt Chatbot</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-logo">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title-wrap">
+            <h1>HealthPulse AI</h1>
+            <span class="badge badge-teal">Healthcare Assistant</span>
+          </div>
+          <p class="brand-subtitle">Clinical Knowledge • Symptom Triage • LLM Powered</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="open-key-modal-btn" class="btn btn-outline btn-sm">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1.5 1.5L12 11l-4-4-5 5 4 4 1-1m8-8l2 2m-3 3l2 2"></path></svg>
+          <span id="key-btn-label">API Key: Default</span>
+        </button>
+        <a href="tel:911" class="emergency-pill" title="In a life-threatening emergency, call emergency services immediately">
+          <span class="pulse-dot"></span>
+          Emergency: 911 / 112
+        </a>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-chat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        Healthcare Chatbot
+      </button>
+      <button class="tab-btn" data-tab="tab-triage">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Symptom Triage Checker
+      </button>
+      <button class="tab-btn" data-tab="tab-vitals">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        Vitals & Risk Analyzer
+      </button>
+      <button class="tab-btn" data-tab="tab-redflags">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        Emergency Red-Flags
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- TAB 1: Chatbot -->
+    <section id="tab-chat" class="tab-pane active">
+      <div class="chat-wrapper">
+        <div class="chat-card">
+          <!-- Chat Header -->
+          <div class="chat-header-bar">
+            <div>
+              <h2>Medical Query & Doubt Assistant</h2>
+              <p>Ask anything about symptoms, drug precautions, home care, or diet.</p>
+            </div>
+            <div class="chat-actions-group">
+              <span id="active-model-tag" class="model-tag">Engine: Clinical Knowledge</span>
+              <button id="clear-chat-btn" class="btn btn-ghost btn-sm" title="Clear chat history">Clear</button>
+            </div>
+          </div>
+
+          <!-- Quick Doubt Starters -->
+          <div class="quick-doubts">
+            <span class="doubt-label">Common Doubts:</span>
+            <button class="doubt-chip" data-msg="What are safe home remedies for high fever and body ache?">Fever Home Remedies</button>
+            <button class="doubt-chip" data-msg="Is it safe to take Paracetamol with Ibuprofen? What is the gap?">Paracetamol with Ibuprofen</button>
+            <button class="doubt-chip" data-msg="How can I manage high blood pressure naturally through diet?">High BP Diet & DASH</button>
+            <button class="doubt-chip" data-msg="What should I do for severe throbbing migraine with nausea?">Migraine Relief</button>
+            <button class="doubt-chip" data-msg="What are early warning signs of pre-diabetes and high blood sugar?">Pre-diabetes Signs</button>
+          </div>
+
+          <!-- Messages Body -->
+          <div id="chat-messages" class="chat-messages">
+            <div class="message assistant-msg">
+              <div class="msg-avatar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+              </div>
+              <div class="msg-body">
+                <div class="msg-meta">
+                  <span class="sender-title">HealthPulse AI Assistant</span>
+                  <span class="msg-time">Just now</span>
+                </div>
+                <div class="msg-text">
+                  Hello! I am your <strong>Healthcare Virtual Assistant</strong>. You can ask me any medical doubts, symptoms, medication questions, or general health concerns.
+                  <br><br>
+                  <em>Note: I provide evidence-based healthcare educational guidance. For life-threatening emergencies, always dial 911 or 112 immediately.</em>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Area -->
+          <form id="chat-form" class="chat-input-bar">
+            <button type="button" id="voice-input-btn" class="btn-icon" title="Voice Input (Speak)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            </button>
+            <input type="text" id="chat-input" placeholder="Ask your health question or doubt (e.g. 'Can I take ibuprofen on an empty stomach?')..." autocomplete="off" />
+            <button type="submit" class="btn btn-teal" id="send-btn">
+              <span>Send</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: Symptom Triage Checker -->
+    <section id="tab-triage" class="tab-pane">
+      <div class="two-col-layout">
+        <!-- Input Form -->
+        <div class="panel-card">
+          <div class="card-head">
+            <h2>Clinical Symptom Triage Assessment</h2>
+            <p>Answer a few questions to receive evidence-based triage priority guidance.</p>
+          </div>
+          <form id="triage-form" class="form-body">
+            <div class="form-field">
+              <label for="triage-symptom">Primary Symptom or Chief Complaint:</label>
+              <input type="text" id="triage-symptom" class="text-input" placeholder="e.g. High fever, persistent dry cough, migraine, rash" required />
+            </div>
+
+            <div class="form-field">
+              <div class="flex-between">
+                <label for="triage-severity">Pain / Discomfort Severity Level (1 - 10):</label>
+                <span id="severity-val" class="field-badge">4 - Moderate</span>
+              </div>
+              <input type="range" id="triage-severity" min="1" max="10" value="4" class="slider" />
+              <div class="slider-scale">
+                <span>1 (Mild)</span>
+                <span>5 (Distressing)</span>
+                <span>10 (Unbearable)</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="triage-duration">Symptom Duration (Days):</label>
+                <input type="number" id="triage-duration" class="text-input" min="1" max="90" value="2" />
+              </div>
+              <div class="form-field">
+                <label for="triage-age">Patient Age (Optional):</label>
+                <input type="number" id="triage-age" class="text-input" min="1" max="120" placeholder="e.g. 28" />
+              </div>
+            </div>
+
+            <div class="form-field checkbox-field">
+              <label class="checkbox-label">
+                <input type="checkbox" id="triage-chronic" />
+                <span>Patient has chronic conditions (Diabetes, Hypertension, Heart Disease, Asthma)</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-teal btn-block">Assess Triage Level</button>
+          </form>
+        </div>
+
+        <!-- Result Box -->
+        <div class="panel-card" id="triage-result-card">
+          <div class="card-head">
+            <h2>Triage Evaluation & Next Steps</h2>
+            <p>Clinical risk stratification and recommended healthcare actions.</p>
+          </div>
+          <div id="triage-result-content" class="result-placeholder">
+            <div class="placeholder-icon">🩺</div>
+            <p>Fill out the symptom details on the left and click <strong>"Assess Triage Level"</strong> to see clinical assessment.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: Vitals Tracker -->
+    <section id="tab-vitals" class="tab-pane">
+      <div class="two-col-layout">
+        <!-- Vitals Form -->
+        <div class="panel-card">
+          <div class="card-head">
+            <h2>Vital Signs & Health Metric Input</h2>
+            <p>Enter any available health measurements to check against medical guidelines.</p>
+          </div>
+          <form id="vitals-form" class="form-body">
+            <div class="form-row">
+              <div class="form-field">
+                <label for="vital-systolic">Blood Pressure Systolic (mmHg):</label>
+                <input type="number" id="vital-systolic" class="text-input" placeholder="e.g. 120" min="60" max="250" />
+              </div>
+              <div class="form-field">
+                <label for="vital-diastolic">Blood Pressure Diastolic (mmHg):</label>
+                <input type="number" id="vital-diastolic" class="text-input" placeholder="e.g. 80" min="40" max="160" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="vital-hr">Resting Heart Rate (BPM):</label>
+                <input type="number" id="vital-hr" class="text-input" placeholder="e.g. 72" min="30" max="220" />
+              </div>
+              <div class="form-field">
+                <label for="vital-spo2">Oxygen Saturation SpO2 (%):</label>
+                <input type="number" id="vital-spo2" class="text-input" placeholder="e.g. 98" min="60" max="100" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="vital-glucose">Blood Glucose (mg/dL):</label>
+                <input type="number" id="vital-glucose" class="text-input" placeholder="e.g. 95" min="20" max="600" />
+              </div>
+              <div class="form-field">
+                <label for="vital-glucose-type">Test Type:</label>
+                <select id="vital-glucose-type" class="text-input">
+                  <option value="fasting" selected>Fasting (8h without food)</option>
+                  <option value="random">Post-Meal / Random</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-teal btn-block">Analyze Vital Signs</button>
+          </form>
+        </div>
+
+        <!-- Vitals Analysis Cards -->
+        <div class="panel-card">
+          <div class="card-head">
+            <h2>Clinical Biomarker Analysis</h2>
+            <p>AHA, ADA, and WHO standard risk categorizations.</p>
+          </div>
+          <div id="vitals-results-container" class="vitals-cards-grid">
+            <div class="vital-card empty-vital">
+              <h4>Blood Pressure</h4>
+              <p>Enter systolic and diastolic readings to evaluate.</p>
+            </div>
+            <div class="vital-card empty-vital">
+              <h4>Heart Rate</h4>
+              <p>Enter resting BPM to evaluate.</p>
+            </div>
+            <div class="vital-card empty-vital">
+              <h4>Blood Glucose</h4>
+              <p>Enter blood sugar reading to evaluate.</p>
+            </div>
+            <div class="vital-card empty-vital">
+              <h4>Oxygen SpO2</h4>
+              <p>Enter pulse oximeter reading to evaluate.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: Emergency Red Flags -->
+    <section id="tab-redflags" class="tab-pane">
+      <div class="full-panel">
+        <div class="card-head">
+          <div class="emergency-header">
+            <span class="warning-icon">⚠️</span>
+            <div>
+              <h2>Emergency Red-Flag Symptoms & Immediate Protocol</h2>
+              <p>Recognize signs that require immediate emergency medical care without delay.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="redflags-grid">
+          <div class="redflag-card">
+            <div class="redflag-icon">🫀</div>
+            <h3>Heart Attack (Myocardial Infarction)</h3>
+            <ul>
+              <li>Crushing pressure, fullness, or squeezing pain in center of chest</li>
+              <li>Pain radiating to left shoulder, arm, back, neck, or jaw</li>
+              <li>Cold sweat, lightheadedness, or sudden nausea</li>
+            </ul>
+            <div class="action-alert">Call 911 / 112 immediately. Sit and rest.</div>
+          </div>
+
+          <div class="redflag-card">
+            <div class="redflag-icon">🧠</div>
+            <h3>Stroke (BE-FAST Signs)</h3>
+            <ul>
+              <li><strong>Balance:</strong> Sudden loss of balance or coordination</li>
+              <li><strong>Eyes:</strong> Sudden loss of vision in one or both eyes</li>
+              <li><strong>Face:</strong> Facial drooping, uneven smile</li>
+              <li><strong>Arms:</strong> Arm weakness or numbness on one side</li>
+              <li><strong>Speech:</strong> Slurred speech, inability to repeat words</li>
+              <li><strong>Time:</strong> Call emergency services immediately!</li>
+            </ul>
+            <div class="action-alert">Every minute matters. Note the exact onset time.</div>
+          </div>
+
+          <div class="redflag-card">
+            <div class="redflag-icon">🫁</div>
+            <h3>Severe Respiratory Distress</h3>
+            <ul>
+              <li>Struggling to breathe, gasping, or blueish tint to lips/fingernails</li>
+              <li>Inability to speak in full sentences without pausing for breath</li>
+              <li>High-pitched wheezing or stridor in the throat</li>
+            </ul>
+            <div class="action-alert">Sit upright, use rescue inhaler if prescribed, call 911.</div>
+          </div>
+
+          <div class="redflag-card">
+            <div class="redflag-icon">🐝</div>
+            <h3>Anaphylaxis (Severe Allergy)</h3>
+            <ul>
+              <li>Rapid swelling of lips, tongue, throat, or face</li>
+              <li>Widespread hives with difficulty swallowing or breathing</li>
+              <li>Sudden drop in blood pressure, dizziness, or collapse</li>
+            </ul>
+            <div class="action-alert">Use Epinephrine auto-injector (EpiPen) immediately.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- API Key Modal -->
+  <div id="key-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Google Gemini API Key Configuration</h3>
+        <button id="close-modal-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-content">
+        <p>You can plug in your <strong>Google Gemini API Key</strong> to unlock live open-ended LLM medical conversations.</p>
+        <p class="small-note">If left empty, HealthPulse AI automatically uses its <strong>Embedded Clinical Knowledge Engine</strong>, ensuring 100% uptime with zero setup.</p>
+        <div class="form-field" style="margin-top: 14px;">
+          <label for="gemini-key-input">Gemini API Key:</label>
+          <input type="password" id="gemini-key-input" class="text-input" placeholder="AIzaSy..." />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="clear-key-btn" class="btn btn-ghost btn-sm">Use Default Engine</button>
+        <button id="save-key-btn" class="btn btn-teal btn-sm">Save API Key</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>HealthPulse AI • Healthcare Virtual Assistant & Medical Doubt Chatbot • Created by <strong>Madhur Dhillon</strong></p>
+      <p class="footer-disclaimer">Medical Disclaimer: This assistant provides general healthcare information for educational purposes only and does not substitute professional medical advice, clinical diagnosis, or hospital treatment.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
