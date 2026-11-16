@@ -1,7 +1,7 @@
 # 🤖 Probabilistic Virtual Assistant
 ### AI Lab Assignment • Hidden Markov Model • EM Algorithm • Bayesian Network
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/madhurdhillon/AiLab-VirtualAssistant)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Madhur-7568/AiLab-VirtualAssistant)
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/badge/tests-14%20passed-brightgreen.svg)](tests/)
@@ -165,7 +165,7 @@ AiLab-VirtualAssistant/
 
 ### 2. Clone and Install
 ```bash
-git clone https://github.com/madhurdhillon/AiLab-VirtualAssistant.git
+git clone https://github.com/Madhur-7568/AiLab-VirtualAssistant.git
 cd AiLab-VirtualAssistant
 
 # Create virtual environment (optional but recommended)
@@ -235,7 +235,7 @@ This repository is pre-configured with `vercel.json` and optimized for zero-conf
 ### Method 1: Deploy with Vercel Web Dashboard (Recommended)
 1. Push your repository to your GitHub account:
    ```bash
-   git remote add origin https://github.com/<your-username>/AiLab-VirtualAssistant.git
+   git remote add origin https://github.com/Madhur-7568/AiLab-VirtualAssistant.git
    git branch -M main
    git push -u origin main
    ```
