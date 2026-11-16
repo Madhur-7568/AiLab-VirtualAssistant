@@ -12,7 +12,7 @@
 ## 🌐 Live Web Deployment
 
 > **Live Deployment Link:**  
-> 👉 **[https://ailab-virtualassistant.vercel.app](https://ailab-virtualassistant.vercel.app)**  
+> 👉 **[https://ai-lab-virtual-assistant-8i5b.vercel.app](https://ai-lab-virtual-assistant-8i5b.vercel.app)**  
 > *(Deploy directly to your own Vercel account in 1 click using the Vercel button above)*
 
 ---
