@@ -1,15 +1,7 @@
 """
-Virtual Assistant Modules
-Integrates HMM sequence tagging, EM unsupervised parameter estimation,
-and Bayesian Network decision making into an interactive conversational assistant.
+Assistant Orchestrator Module
 """
 
-from src.assistant.intent_tagger import HMMIntentTagger
-from src.assistant.decision_engine import BayesianDecisionEngine
-from src.assistant.pipeline import ProbabilisticVirtualAssistant
+from src.assistant.health_assistant import HealthAssistant
 
-__all__ = [
-    "HMMIntentTagger",
-    "BayesianDecisionEngine",
-    "ProbabilisticVirtualAssistant",
-]
+__all__ = ["HealthAssistant"]

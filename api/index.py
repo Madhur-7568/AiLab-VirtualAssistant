@@ -1,12 +1,6 @@
 """
-FastAPI Backend & Vercel Serverless Function Entry Point
--------------------------------------------------------
-Exposes RESTful endpoints for:
-- Virtual Assistant Conversational Pipeline (/api/chat)
-- HMM Viterbi & Forward-Backward Decoding (/api/hmm/viterbi)
-- Baum-Welch EM Unsupervised Training (/api/em/train)
-- Bayesian Network Variable Elimination (/api/bayes/infer)
-- Network Metadata & Topology (/api/network)
+HealthPulse AI: Healthcare Virtual Assistant API
+Vercel Serverless Function & FastAPI Application
 """
 
 import sys
@@ -16,15 +10,15 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-# Ensure workspace root is in sys.path
+# Ensure root directory is on sys.path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.assistant.pipeline import ProbabilisticVirtualAssistant
+from src.assistant.health_assistant import HealthAssistant
 
 app = FastAPI(
-    title="Probabilistic Virtual Assistant API",
-    description="Virtual Assistant powered by Hidden Markov Models, EM Algorithm, and Bayesian Networks.",
-    version="1.0.0",
+    title="HealthPulse AI Assistant API",
+    description="Healthcare Virtual Assistant with LLM Integration, Symptom Triage, and Vitals Tracker.",
+    version="2.0.0",
 )
 
 # Enable CORS for web deployment
@@ -36,89 +30,71 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-assistant = ProbabilisticVirtualAssistant()
+assistant = HealthAssistant()
 
 
 class ChatRequest(BaseModel):
-    utterance: str
-    user_sentiment: Optional[str] = "Calm"
-    time_of_day: Optional[str] = None
-    override_urgency: Optional[str] = None
+    message: str
+    api_key: Optional[str] = None
 
 
-class HMMRequest(BaseModel):
-    utterance: str
+class TriageRequest(BaseModel):
+    primary_symptom: str
+    severity: Optional[int] = 4
+    duration_days: Optional[int] = 1
+    additional_symptoms: Optional[List[str]] = None
+    has_chronic_illness: Optional[bool] = False
+    age: Optional[int] = None
 
 
-class EMRequest(BaseModel):
-    corpus: Optional[List[str]] = None
-    iterations: Optional[int] = 15
-
-
-class BayesInferRequest(BaseModel):
-    query_var: str
-    evidence: Optional[Dict[str, str]] = None
+class VitalsRequest(BaseModel):
+    systolic: Optional[int] = None
+    diastolic: Optional[int] = None
+    heart_rate: Optional[int] = None
+    blood_glucose: Optional[float] = None
+    glucose_type: Optional[str] = "fasting"
+    spo2: Optional[int] = None
 
 
 @app.get("/api/health")
-def health():
+def health_check():
     return {
         "status": "healthy",
-        "service": "Probabilistic Virtual Assistant",
-        "version": "1.0.0",
-        "models": ["Hidden Markov Model (HMM)", "Expectation-Maximization (EM)", "Bayesian Network"],
+        "service": "HealthPulse AI - Healthcare Virtual Assistant",
+        "version": "2.0.0",
+        "llm_support": ["Google Gemini 1.5 Flash", "OpenAI GPT-4o-mini", "Clinical Knowledge Engine (Fallback)"],
     }
 
 
 @app.post("/api/chat")
-def chat(req: ChatRequest):
-    if not req.utterance.strip():
-        raise HTTPException(status_code=400, detail="Utterance cannot be empty.")
-    result = assistant.process_utterance(
-        utterance=req.utterance,
-        user_sentiment=req.user_sentiment or "Calm",
-        time_of_day=req.time_of_day,
-        override_urgency=req.override_urgency,
-    )
+def chat_endpoint(req: ChatRequest):
+    if not req.message.strip():
+        raise HTTPException(status_code=400, detail="Message cannot be empty.")
+    result = assistant.chat(user_message=req.message, api_key_override=req.api_key)
     return result
 
 
-@app.post("/api/hmm/viterbi")
-def hmm_viterbi(req: HMMRequest):
-    res = assistant.tagger.tag_utterance(req.utterance)
-    return res
+@app.post("/api/triage")
+def triage_endpoint(req: TriageRequest):
+    if not req.primary_symptom.strip():
+        raise HTTPException(status_code=400, detail="Primary symptom is required.")
+    return assistant.check_symptoms(
+        symptom=req.primary_symptom,
+        severity=req.severity or 4,
+        duration=req.duration_days or 1,
+        additional=req.additional_symptoms or [],
+        chronic=req.has_chronic_illness or False,
+        age=req.age,
+    )
 
 
-@app.post("/api/em/train")
-def em_train(req: EMRequest):
-    corpus = req.corpus if req.corpus else None
-    iterations = req.iterations or 15
-    res = assistant.train_unsupervised_em(corpus=corpus, iterations=iterations)
-    return res
-
-
-@app.post("/api/bayes/infer")
-def bayes_infer(req: BayesInferRequest):
-    try:
-        posteriors = assistant.decision_engine.bn.variable_elimination(
-            query_var=req.query_var,
-            evidence=req.evidence or {},
-        )
-        return {
-            "query_var": req.query_var,
-            "evidence": req.evidence or {},
-            "posterior_distribution": posteriors,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-
-@app.get("/api/network")
-def get_network_topology():
-    bn = assistant.decision_engine.bn
-    return {
-        "nodes": bn.nodes,
-        "node_states": bn.node_states,
-        "parents": bn.parents,
-        "children": bn.children,
-    }
+@app.post("/api/vitals")
+def vitals_endpoint(req: VitalsRequest):
+    return assistant.analyze_vitals(
+        systolic=req.systolic,
+        diastolic=req.diastolic,
+        heart_rate=req.heart_rate,
+        blood_glucose=req.blood_glucose,
+        glucose_type=req.glucose_type or "fasting",
+        spo2=req.spo2,
+    )
